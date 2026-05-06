@@ -13,7 +13,7 @@ export const faqs = [
 	},
 	{
 		question: 'Which sportsbooks does TrueShotOdds support?',
-		answer: 'TrueShotOdds monitors 40+ sportsbooks including DraftKings, FanDuel, BetMGM, Caesars, PointsBet, Hard Rock, Fliff, and many more. We are continuously adding new books.',
+		answer: 'TrueShotOdds monitors 10+ sportsbooks including DraftKings, FanDuel, BetMGM, Caesars, Fliff, Kalshi, and many more. We are continuously adding new books.',
 	},
 	{
 		question: 'What is the difference between arbitrage and +EV betting?',
