@@ -20,7 +20,7 @@
     "@tsparticles/slim": "^3.9.1",
     "firebase": "^12.5.0",
     "lightweight-charts": "^5.1.0",
-    "posthog-js": "^1.295.0",
+    "posthog-js": "^1.372.2",
     "rc-slider": "^11.1.9",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
