@@ -115,7 +115,7 @@ function Home() {
 			)}
 
 			{/* Nav Links - scrolls with page */}
-			<nav className="hidden md:flex absolute top-7 left-60 z-40 items-center gap-6">
+			<nav className="hidden md:flex absolute top-6.5 left-63 z-40 items-center gap-6">
 				<button
 					onClick={() => navigate('/pricing')}
 					className="text-md font-bold text-gray-100 hover:text-white transition-colors cursor-pointer"
@@ -174,7 +174,7 @@ function Home() {
 									Live Odds Straight To Your Feed
 								</h2>
 								<p className="text-xl text-gray-100 text-center lg:text-left mb-6">
-									TrueShotOdds focuses on getting real-time arbitrage bets delivered directly to your dashboard. Don't miss out as we expand our reach on sportsbooks.
+									TrueShotOdds focuses on getting real-time bets delivered directly to your dashboard. Don't miss out as we expand our reach on sportsbooks.
 								</p>
 							</div>
 
@@ -305,7 +305,7 @@ function Home() {
 			</div>
 
 			{/* Final CTA Section */}
-			<div className="container mx-auto px-4 py-20">
+			<div className="relative z-10 px-4 py-20 bg-gray-900 w-full">
 				<div className="max-w-4xl mx-auto text-center">
 					<div className="p-12 md:p-16">
 						<h2 className="heading-hero uppercase text-4xl md:text-5xl text-gray-100 mb-12">

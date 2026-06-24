@@ -83,7 +83,9 @@ export default function FeatureSection({
 					{learnMorePath && (
 						<button
 							onClick={() => navigate(learnMorePath)}
-							className={`mt-8 text-indigo-400 hover:text-indigo-300 font-semibold text-lg transition-colors cursor-pointer flex items-center gap-1 transition-all duration-700 delay-[400ms] ${
+							className={`[transition:opacity_700ms_ease_300ms,transform_700ms_ease_300ms,color_300ms_ease_0ms]
+								hover:[transition:opacity_700ms_ease_0ms,transform_700ms_ease_0ms,color_300ms_ease_0ms]
+								mt-8 text-indigo-400 hover:text-indigo-300 font-semibold text-lg cursor-pointer flex items-center gap-1 ${
 								isInView
 									? 'opacity-100 translate-y-0'
 									: 'opacity-0 translate-y-4'

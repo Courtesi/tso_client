@@ -4,7 +4,7 @@ function Footer() {
 	const navigate = useNavigate();
 
 	return (
-		<footer className="bg-indigo-950/50 backdrop-blur-sm border-t border-white/10 py-8 mt-20">
+		<footer className="bg-indigo-950/50 backdrop-blur-sm border-t border-white/10 py-8">
 			<div className="container mx-auto px-4">
 				<div className="flex flex-col md:flex-row justify-between items-center gap-6">
 					{/* Logo and Copyright */}
