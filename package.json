@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "test": "node --test tests/terminalMerge.test.mjs",
+    "test": "node --test tests/terminalMerge.test.mjs tests/terminalSync.test.mjs tests/websocket.test.mjs",
     "preview": "vite preview",
     "prepare": "husky"
   },

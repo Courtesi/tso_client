@@ -44,12 +44,16 @@ export class WebSocketService {
 	private ws: WebSocket | null = null;
 	private reconnectTimeout: number | null = null;
 	private reconnectAttempts = 0;
-	private maxReconnectAttempts = 5;
+	private maxReconnectDelay = 30000;
+	private connectTimeout: number | null = null;
 	private reconnectDelay = 1000;
 	private pingInterval: number | null = null;
 	private pongTimeout: number | null = null;
 	private connectionStatus: ConnectionStatus = 'disconnected';
 	private currentToken: string | null = null;
+	private intentionallyClosed = false;
+	private refreshToken = false;
+	private subscribedCallbacks = new Map<StreamType, Set<() => void>>();
 	private pendingSubscriptions: Map<StreamType, {filters: FilterOptions, callback: StreamCallback}> = new Map();
 	private activeSubscriptions: Map<StreamType, { filters: FilterOptions }> = new Map();
 
@@ -70,6 +74,7 @@ export class WebSocketService {
 			return;
 		}
 
+		this.intentionallyClosed = false;
 		this.currentToken = token;
 		this.setStatus('reconnecting');
 
@@ -78,10 +83,13 @@ export class WebSocketService {
 			console.log('Connecting to WebSocket:', wsUrl);
 
 			this.ws = new WebSocket(wsUrl);
+            const socket = this.ws;
+            this.connectTimeout = window.setTimeout(() => {
+                if (this.ws === socket) socket.close(4000, 'Authentication timed out');
+            }, 15000);
 
 			this.ws.onopen = async () => {
 				console.log('WebSocket connected, authenticating...');
-				this.reconnectAttempts = 0;
 
 				// Send authentication message
 				this.send({
@@ -92,7 +100,7 @@ export class WebSocketService {
 
 			this.ws.onmessage = this.handleMessage;
 			this.ws.onerror = this.handleError;
-			this.ws.onclose = this.handleClose;
+			this.ws.onclose = event => { if (this.ws === socket) this.handleClose(event); };
 
 		} catch (error) {
 			console.error('WebSocket connection failed:', error);
@@ -101,6 +109,9 @@ export class WebSocketService {
 	}
 
 	disconnect(): void {
+		this.intentionallyClosed = true;
+		if (this.connectTimeout) clearTimeout(this.connectTimeout);
+		this.connectTimeout = null;
 		console.log('Disconnecting WebSocket');
 		this.stopHeartbeat();
 
@@ -119,6 +130,7 @@ export class WebSocketService {
 		this.onMessageCallbacks.clear();
 		this.pendingSubscriptions.clear();
 		this.activeSubscriptions.clear();
+		this.subscribedCallbacks.clear();
 	}
 
 	subscribe(stream: StreamType, filters: FilterOptions, onMessage: StreamCallback): void {
@@ -171,6 +183,13 @@ export class WebSocketService {
 		}
 	}
 
+	onSubscribed(stream: StreamType, callback: () => void): () => void {
+        const callbacks = this.subscribedCallbacks.get(stream) ?? new Set<() => void>();
+        callbacks.add(callback);
+        this.subscribedCallbacks.set(stream, callbacks);
+        return () => { callbacks.delete(callback); };
+    }
+
 	onStatusChange(callback: (status: ConnectionStatus) => void): () => void {
 		this.onStatusChangeCallbacks.add(callback);
 
@@ -195,6 +214,10 @@ export class WebSocketService {
 
 			switch (message.type) {
 				case 'auth_success':
+					if (this.connectTimeout) clearTimeout(this.connectTimeout);
+					this.connectTimeout = null;
+					this.reconnectAttempts = 0;
+					this.refreshToken = false;
 					console.log('Authentication successful:', message.user);
 					this.setStatus('connected');
 					this.startHeartbeat();
@@ -222,6 +245,7 @@ export class WebSocketService {
 					break;
 
 				case 'subscribed':
+					if (message.stream) this.subscribedCallbacks.get(message.stream)?.forEach(callback => callback());
 					console.log(`Subscribed to ${message.stream}`);
 					break;
 
@@ -270,32 +294,22 @@ export class WebSocketService {
 		console.log('WebSocket closed:', event.code, event.reason);
 
 		this.stopHeartbeat();
+		if (this.connectTimeout) clearTimeout(this.connectTimeout);
+		this.connectTimeout = null;
 		this.setStatus('disconnected');
 
 		// Attempt to reconnect if not intentionally closed
-		if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
+		this.ws = null;
+		if (!this.intentionallyClosed) {
 			this.reconnect();
-		} else if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-			console.error('Max reconnection attempts reached');
 		}
 	}
 
 	private handleAuthError(): void {
-		// Authentication failed, try to get a fresh token and reconnect
-		this.disconnect();
-
-		setTimeout(async () => {
-			try {
-				const currentUser = auth.currentUser;
-				if (currentUser) {
-					const newToken = await currentUser.getIdToken(true); // Force refresh
-					await this.connect(newToken);
-				}
-			} catch (error) {
-				console.error('Failed to refresh token:', error);
-			}
-		}, 2000);
-	}
+        // Preserve subscriptions and callbacks while refreshing authentication.
+        this.refreshToken = true;
+        this.ws?.close(4001, 'Refresh authentication');
+    }
 
 	private reconnect(): void {
 		if (this.reconnectTimeout) {
@@ -303,9 +317,9 @@ export class WebSocketService {
 		}
 
 		this.reconnectAttempts++;
-		const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1); // Exponential backoff
+		const delay = Math.min(this.maxReconnectDelay, this.reconnectDelay * Math.pow(2, Math.min(this.reconnectAttempts - 1, 10))); // Exponential backoff
 
-		console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+		console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
 
 		this.setStatus('reconnecting');
 
@@ -315,7 +329,8 @@ export class WebSocketService {
 			try {
 				const currentUser = auth.currentUser;
 				if (currentUser) {
-					const token = await currentUser.getIdToken();
+					const token = await currentUser.getIdToken(this.refreshToken);
+					if (this.intentionallyClosed) return;
 					await this.connect(token);
 				}
 			} catch (error) {
