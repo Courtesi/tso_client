@@ -4,7 +4,7 @@
  * circular import with GameLineChart (which imports OddsScreen).
  */
 import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
-import { createChart, type IChartApi, type ISeriesApi, type LineData, LineSeries } from 'lightweight-charts';
+import { createChart, type IChartApi, type ISeriesApi, type LineData, LineSeries, LineType } from 'lightweight-charts';
 import type { GameTerminalData, OutcomeLine } from '../types/terminal';
 
 interface GameChartProps {
@@ -48,9 +48,15 @@ function getSportsbookColor(sportsbook: string): string {
 }
 
 function GameChart({ game }: GameChartProps) {
+	const [displayTime, setDisplayTime] = useState(() => Date.now() / 1000);
+	useEffect(() => {
+		const timer = window.setInterval(() => setDisplayTime(Date.now() / 1000), 30000);
+		return () => window.clearInterval(timer);
+	}, []);
 	const chartContainerRef = useRef<HTMLDivElement>(null);
 	const chartRef = useRef<IChartApi | null>(null);
 	const seriesRefs = useRef<Map<string, ISeriesApi<'Line'>>>(new Map());
+	const fittedOutcomeRef = useRef<string | null>(null);
 
 	const moneylineMarket = game.markets.find(m => m.market_type === 'MONEY');
 
@@ -131,6 +137,7 @@ function GameChart({ game }: GameChartProps) {
 			const series = chartRef.current!.addSeries(LineSeries, {
 				color: getSportsbookColor(sportsbook),
 				lineWidth: 2,
+				lineType: LineType.WithSteps,
 				title: sportsbook,
 			});
 
@@ -144,12 +151,22 @@ function GameChart({ game }: GameChartProps) {
 				.sort((a, b) => a[0] - b[0])
 				.map(([time, value]) => ({ time: time as LineData['time'], value }));
 
-			if (data.length > 0) series.setData(data);
+			if (data.length > 0) {
+				// Display-only extension: never add synthetic observations to history.
+				const last = data[data.length - 1];
+				const end = Math.max(displayTime, Date.now() / 1000) - timezoneOffsetSeconds;
+				if (end > Number(last.time)) data.push({ time: end as LineData['time'], value: last.value });
+				series.setData(data);
+			}
 			seriesRefs.current.set(sportsbook, series);
 		});
 
-		chartRef.current.timeScale().fitContent();
-	}, [selectedOutcome]);
+		// Keep the user's zoom while display-only endpoints advance.
+		if (fittedOutcomeRef.current !== selectedOutcome.outcome_id) {
+			chartRef.current.timeScale().fitContent();
+			fittedOutcomeRef.current = selectedOutcome.outcome_id;
+		}
+	}, [selectedOutcome, displayTime]);
 
 	// Resize handler
 	useEffect(() => {
@@ -200,6 +217,7 @@ function GameChart({ game }: GameChartProps) {
 
 			{/* Chart canvas */}
 			<div ref={chartContainerRef} />
+			<p className="mt-2 text-xs text-gray-400">Last observed prices; changes between observations may be missed.</p>
 		</div>
 	);
 }
