@@ -1,10 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useStripe } from '../contexts/StripeContext';
-import { useParticles } from '../contexts/ParticlesContext';
 import Navbar from '../components/Navbar';
-import Particles from "@tsparticles/react";
+import GridBackground from '../components/GridBackground';
 import AuthModal from '../components/AuthModal';
 import Footer from '../components/Footer';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
@@ -15,7 +14,6 @@ import { api } from '../services/api';
 function Subscription() {
 	const { currentUser, userTier } = useAuth();
 	const { products, loading, error, fetchProducts, subscription } = useStripe();
-	const { init } = useParticles();
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 	const [checkoutLoading, setCheckoutLoading] = useState(false);
 	const [portalLoading, setPortalLoading] = useState(false);
@@ -24,54 +22,6 @@ function Subscription() {
 		fetchProducts();
 	}, [fetchProducts]);
 
-	const particlesOptions = useMemo(() => ({
-		background: {
-			color: {
-				value: "transparent",
-			},
-		},
-		fpsLimit: 60,
-		fullScreen: {
-			enable: false,
-		},
-		responsive: [],
-		particles: {
-			number: {
-				value: 150,
-				density: {
-					enable: false
-				}
-			},
-			color: {
-				value: "#ffffff",
-			},
-			shape: {
-				type: "circle",
-			},
-			opacity: {
-				value: { min: 0.1, max: 0.8 },
-				animation: {
-					enable: true,
-					speed: 0.5,
-					sync: false,
-				},
-			},
-			size: {
-				value: { min: 0.5, max: 2.5 },
-			},
-			move: {
-				enable: true,
-				speed: 0.1,
-				direction: "none" as const,
-				random: false,
-				straight: false,
-				outModes: {
-					default: "bounce" as const,
-				},
-			},
-		},
-		detectRetina: true,
-	}), []);
 
 	const handleCheckout = async (priceId: string) => {
 		if (!currentUser) {
@@ -169,23 +119,15 @@ function Subscription() {
 			<meta property="og:description" content="Start finding arbitrage and +EV bets today. Free and Premium plans available." />
 		</Helmet>
 		<div className="min-h-screen flex flex-col text-white relative bg-gradient-to-br from-slate-950 via-gray-950 to-slate-900">
-			{/* Starry Background */}
-			{init && (
-				<Particles
-					key="stable-particles"
-					id="pricing-particles"
-					className="fixed inset-0 z-0 pointer-events-none"
-					options={particlesOptions}
-				/>
-			)}
+			<GridBackground />
 
 			{/* Navigation Bar */}
 			<Navbar onAuthModalOpen={() => setIsAuthModalOpen(true)} />
 
-			<div className="flex-1 container mx-auto px-4 py-20 pt-32">
+			<div className="relative z-10 flex-1 container mx-auto px-4 py-20 pt-32">
 				{/* Header */}
 				<div className="text-center mb-20">
-					<h1 className="heading-hero uppercase text-4xl md:text-5xl text-gray-100 mb-4">
+					<h1 className="heading-hero text-4xl md:text-5xl text-gray-100 mb-4">
 						Unlock Live Bets with Premium
 					</h1>
 				</div>

@@ -19,37 +19,37 @@ function Footer() {
 					<div className="flex flex-wrap justify-center gap-6 text-sm">
 						<button
 							onClick={() => navigate('/pricing')}
-							className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100 cursor-pointer"
 						>
 							Pricing
 						</button>
 						<button
 							onClick={() => navigate('/lines')}
-							className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100 cursor-pointer"
 						>
 							Betting Lines
 						</button>
 						<button
 							onClick={() => navigate('/arbitrage-betting')}
-							className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100 cursor-pointer"
 						>
 							Arbitrage Betting
 						</button>
 						<button
 							onClick={() => navigate('/ev-betting')}
-							className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100 cursor-pointer"
 						>
 							+EV Betting
 						</button>
 						<button
 							onClick={() => navigate('/faq')}
-							className="text-gray-300 hover:text-white transition-colors cursor-pointer"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100 cursor-pointer"
 						>
 							FAQ
 						</button>
 						<a
 							href="mailto:support@trueshotodds.com"
-							className="text-gray-300 hover:text-white transition-colors"
+							className="text-gray-300 hover:text-white active:opacity-60 transition-[color,opacity] duration-100"
 						>
 							Contact
 						</a>

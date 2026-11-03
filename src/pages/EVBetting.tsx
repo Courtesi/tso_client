@@ -26,7 +26,7 @@ function EVBetting() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-20 max-w-4xl">
-				<h1 className="heading-hero uppercase text-4xl lg:text-6xl text-gray-100 text-center mb-6">
+				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					What Is +EV Betting?
 				</h1>
 				<p className="text-xl text-gray-300 text-center max-w-2xl mx-auto">
@@ -37,7 +37,7 @@ function EVBetting() {
 			{/* Content */}
 			<div className="w-full bg-gray-900 py-20 px-4">
 				<div className="max-w-4xl mx-auto">
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						Understanding Expected Value
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">
@@ -62,7 +62,7 @@ function EVBetting() {
 						<p className="text-gray-300 text-lg">The key is finding bets where sportsbooks have mispriced the odds relative to the true probability — something TrueShotOdds automates.</p>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						+EV vs. Arbitrage Betting
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
@@ -86,7 +86,7 @@ function EVBetting() {
 						</div>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						How TrueShotOdds Finds +EV Bets
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">

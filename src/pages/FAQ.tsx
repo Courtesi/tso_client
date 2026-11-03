@@ -40,7 +40,7 @@ function FAQ() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-12 max-w-3xl">
-				<h1 className="heading-hero uppercase text-4xl lg:text-6xl text-gray-100 text-center mb-6">
+				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					Frequently Asked Questions
 				</h1>
 				<p className="text-xl text-gray-300 text-center">
