@@ -19,7 +19,7 @@ function EVBetting() {
 			<link rel="canonical" href="https://trueshotodds.com/ev-betting" />
 			<meta property="og:url" content="https://trueshotodds.com/ev-betting" />
 			<meta property="og:title" content="What Is +EV Betting? | TrueShotOdds" />
-			<meta property="og:description" content="+EV betting means placing bets where the odds are better than the true probability. TrueShotOdds finds these opportunities automatically across 40+ sportsbooks." />
+			<meta property="og:description" content="+EV betting means placing bets where the odds are better than the true probability. TrueShotOdds finds these opportunities automatically across 10+ sportsbooks." />
 		</Helmet>
 		<div className="min-h-screen text-white bg-gradient-to-br from-gray-900 via-indigo-900 to-indigo-950">
 			<Navbar onAuthModalOpen={() => setIsAuthModalOpen(true)} />
@@ -97,7 +97,7 @@ function EVBetting() {
 							'EV percentage shown for every opportunity',
 							'Filter by sport, league, market type, and minimum EV',
 							'Kelly criterion stake sizing built in',
-							'Updated every few seconds across 40+ sportsbooks',
+							'Updated every few seconds across 10+ sportsbooks',
 						].map((item) => (
 							<li key={item} className="flex items-center gap-3 text-gray-300 text-lg">
 								<svg className="w-5 h-5 text-indigo-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
