@@ -7,6 +7,7 @@ import type { EVBet } from '../types/ev';
 import { applyTerminalFilters } from '../utils/terminalFilters';
 import { api } from '../services/api';
 import { appendLineUpdates, mergeGameHistory } from '../utils/terminalMerge';
+import { TerminalSync } from '../utils/terminalSync';
 
 const PINNED_ARBS_STORAGE_KEY = 'pinnedArbs';
 const PINNED_EV_BETS_STORAGE_KEY = 'pinnedEvBets';
@@ -155,13 +156,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
 	const [selectedGame, setSelectedGame] = useState<GameTerminalData | null>(null);
 
 	// Per-league cache: skip API call if data was fetched recently
-	const LEAGUE_CACHE_TTL = 60_000; // 1 minute
 	const leagueCache = useRef<Map<string, { data: GameTerminalData[]; fetchedAt: number }>>(new Map());
 	const rawChartsDataRef = useRef<GameTerminalData[]>(rawChartsData);
 	useEffect(() => { rawChartsDataRef.current = rawChartsData; }, [rawChartsData]);
 
 	// Track which games have had their full history loaded (per event_id)
 	const [loadedHistoryGames, setLoadedHistoryGames] = useState<Set<string>>(new Set());
+	const loadedHistoryRef = useRef(loadedHistoryGames);
+	useEffect(() => { loadedHistoryRef.current = loadedHistoryGames; }, [loadedHistoryGames]);
 
 	// EV state
 	const [evData, setEvData] = useState<EVBet[]>([]);
@@ -459,46 +461,39 @@ export function DataProvider({ children }: { children: ReactNode }) {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentUser?.uid]);
 
-	// Subscribe to terminal stream (persistent — stays active for the entire session)
-	// League filtering is handled server-side; re-fetch when league changes
-	useEffect(() => {
-		if (!currentUser) return;
-
-		const cache = leagueCache.current;
-
-		setChartsError('');
-		// Reset loaded history tracking when league changes
-		setLoadedHistoryGames(new Set());
-
-		// Check league cache before hitting the API
-		const cached = cache.get(leagueFilter);
-		if (cached && Date.now() - cached.fetchedAt < LEAGUE_CACHE_TTL) {
-			setRawChartsData(cached.data);
-		} else {
-			setChartsLoading(true);
-			api.getTerminalOdds(leagueFilter).then(data => {
-				setRawChartsData(data.data);
-				cache.set(leagueFilter, { data: data.data, fetchedAt: Date.now() });
-				setChartsLoading(false);
-			});
-		}
-
-		wsService.subscribe('terminal', { league: leagueFilter }, (payload) => {
-			const updates = payload.data as LineUpdate[];
-			setRawChartsData(prev => appendLineUpdates(prev, updates));
-			setChartsError('');
-		});
-
-		return () => {
-			// Save current data (includes WS updates) to cache before switching away
-			cache.set(leagueFilter, {
-				data: rawChartsDataRef.current,
-				fetchedAt: Date.now(),
-			});
-			wsService.unsubscribe('terminal');
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [currentUser?.uid, leagueFilter]);
+	// Acknowledged subscriptions (including reconnects) reload snapshots/history.
+    useEffect(() => {
+        if (!currentUser) return;
+        const cache = leagueCache.current;
+        setChartsError('');
+        setChartsLoading(true);
+        setLoadedHistoryGames(new Set());
+        loadedHistoryRef.current = new Set();
+        const cached = cache.get(leagueFilter);
+        setRawChartsData(cached?.data ?? []);
+        const sync = new TerminalSync({
+            getOdds: async () => (await api.getTerminalOdds(leagueFilter)).data,
+            getHistory: async eventId => (await api.getGameHistory(eventId, leagueFilter)).data,
+            loadedHistory: () => loadedHistoryRef.current,
+            replace: games => {
+                setRawChartsData(games);
+                cache.set(leagueFilter, { data: games, fetchedAt: Date.now() });
+                setChartsLoading(false);
+                setChartsError('');
+            },
+            update: updates => setRawChartsData(prev => appendLineUpdates(prev, updates)),
+            error: message => { setChartsLoading(false); setChartsError(message); },
+        });
+        const unsubscribeReady = wsService.onSubscribed('terminal', () => { void sync.refresh(); });
+        wsService.subscribe('terminal', { league: leagueFilter }, payload => sync.receive(payload.data as LineUpdate[]));
+        return () => {
+            sync.stop();
+            unsubscribeReady();
+            cache.set(leagueFilter, { data: rawChartsDataRef.current, fetchedAt: Date.now() });
+            wsService.unsubscribe('terminal');
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentUser?.uid, leagueFilter]);
 
 	// Update arb filters dynamically (separate from terminal filters)
 	// Debounced to prevent overwhelming WebSocket when slider is dragged rapidly

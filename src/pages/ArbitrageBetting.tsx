@@ -80,11 +80,11 @@ function ArbitrageBetting() {
 						How TrueShotOdds Finds Arbs For You
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">
-						Arb opportunities vanish in minutes as sportsbooks adjust their lines. TrueShotOdds monitors 40+ sportsbooks in real time and surfaces every opportunity the moment it appears — so you never have to do the math manually or watch odds feeds yourself.
+						Arb opportunities vanish in minutes as sportsbooks adjust their lines. TrueShotOdds monitors 10+ sportsbooks in real time and surfaces every opportunity the moment it appears — so you never have to do the math manually or watch odds feeds yourself.
 					</p>
 					<ul className="space-y-4 mb-12">
 						{[
-							'Live odds scanning across 40+ sportsbooks',
+							'Live odds scanning across 10+ sportsbooks',
 							'Automatic stake calculations so you know exactly how much to bet',
 							'Alerts on NBA, NFL, MLB and more',
 							'Free tier available — no credit card required',

@@ -162,7 +162,7 @@ function Subscription() {
 		<>
 		<Helmet>
 			<title>Pricing | TrueShotOdds</title>
-			<meta name="description" content="Start finding arbitrage and +EV bets today. Free and Premium plans available. Real-time odds tracking across 40+ sportsbooks." />
+			<meta name="description" content="Start finding arbitrage and +EV bets today. Free and Premium plans available. Real-time odds tracking across 10+ sportsbooks." />
 			<link rel="canonical" href="https://trueshotodds.com/pricing" />
 			<meta property="og:url" content="https://trueshotodds.com/pricing" />
 			<meta property="og:title" content="Pricing | TrueShotOdds" />

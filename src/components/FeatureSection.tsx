@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 
@@ -5,8 +6,10 @@ interface FeatureSectionProps {
 	title: string;
 	description: string;
 	features: string[];
-	imageSrc: string;
-	imageAlt: string;
+	imageSrc?: string;
+	imageAlt?: string;
+	// Rendered instead of the image when provided (e.g. a live component)
+	media?: ReactNode;
 	imagePosition: 'left' | 'right';
 	learnMorePath?: string;
 }
@@ -17,6 +20,7 @@ export default function FeatureSection({
 	features,
 	imageSrc,
 	imageAlt,
+	media,
 	imagePosition,
 	learnMorePath,
 }: FeatureSectionProps) {
@@ -33,7 +37,7 @@ export default function FeatureSection({
 
 					{/* Title */}
 					<h3
-						className={`heading-hero uppercase text-3xl lg:text-5xl text-gray-100 mb-6 transition-all duration-700 delay-100 ${
+						className={`heading-hero text-3xl lg:text-5xl text-gray-100 mb-6 transition-all duration-700 delay-100 ${
 							isInView
 								? 'opacity-100 translate-y-0'
 								: 'opacity-0 translate-y-4'
@@ -111,14 +115,16 @@ export default function FeatureSection({
 								: 'opacity-0 translate-x-12'
 					}`}
 				>
-					<div className="scale-110 lg:scale-160">
-						<img
-							src={imageSrc}
-							alt={imageAlt}
-							className="w-full h-auto"
-							loading="lazy"
-						/>
-					</div>
+					{media ?? (
+						<div className="scale-110 lg:scale-160">
+							<img
+								src={imageSrc}
+								alt={imageAlt}
+								className="w-full h-auto"
+								loading="lazy"
+							/>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

@@ -36,9 +36,6 @@ export function mergeGameHistory(
 			if (!existingOutcome) return hydratedOutcome;
 
 			// Append any WS points that are newer than the history window
-			const latestHistoryTs = hydratedOutcome.history.length > 0
-				? Math.max(...hydratedOutcome.history.map(p => p.timestamp))
-				: 0;
 
 			const mergedHistoryBySportsbook = { ...hydratedOutcome.history_by_sportsbook };
 			const additionalHistory: typeof hydratedOutcome.history = [];
@@ -46,6 +43,8 @@ export function mergeGameHistory(
 			for (const [sb, sbHistory] of Object.entries(
 				existingOutcome.history_by_sportsbook ?? {}
 			)) {
+				const restHistory = mergedHistoryBySportsbook[sb] ?? [];
+				const latestHistoryTs = restHistory.length ? Math.max(...restHistory.map(p => p.timestamp)) : -Infinity;
 				const newPoints = sbHistory.filter(p => p.timestamp > latestHistoryTs);
 				if (newPoints.length > 0) {
 					mergedHistoryBySportsbook[sb] = [
@@ -116,13 +115,16 @@ export function appendLineUpdates(
 		const market = game.markets[marketIdx];
 
 		const outcomeIdx = market.outcomes.findIndex(
-			o => o.outcome_name.toLowerCase() === update.outcome_name.toLowerCase()
+			o => o.outcome_id.toLowerCase().endsWith(`:${update.outcome_name.toLowerCase()}`) || o.outcome_name.toLowerCase() === update.outcome_name.toLowerCase()
 		);
 		if (outcomeIdx === -1) continue;
 
 		const outcome = { ...market.outcomes[outcomeIdx] };
 		market.outcomes[outcomeIdx] = outcome;
 
+		const previousPoints = outcome.history_by_sportsbook?.[update.point.sportsbook] ?? [];
+		const lastPoint = previousPoints[previousPoints.length - 1];
+		if (lastPoint && update.point.timestamp <= lastPoint.timestamp) continue;
 		outcome.history = [...outcome.history, update.point];
 
 		outcome.history_by_sportsbook = { ...outcome.history_by_sportsbook };

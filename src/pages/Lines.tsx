@@ -19,7 +19,7 @@ function Lines() {
 			<link rel="canonical" href="https://trueshotodds.com/lines" />
 			<meta property="og:url" content="https://trueshotodds.com/lines" />
 			<meta property="og:title" content="What Are Betting Lines? | TrueShotOdds" />
-			<meta property="og:description" content="Learn how betting lines work, why they move, and how TrueShotOdds tracks line movement across 40+ sportsbooks in real time." />
+			<meta property="og:description" content="Learn how betting lines work, why they move, and how TrueShotOdds tracks line movement across 10+ sportsbooks in real time." />
 		</Helmet>
 		<div className="min-h-screen text-white bg-gradient-to-br from-gray-900 via-indigo-900 to-indigo-950">
 			<Navbar onAuthModalOpen={() => setIsAuthModalOpen(true)} />
@@ -84,12 +84,12 @@ function Lines() {
 						How TrueShotOdds Tracks Lines
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">
-						TrueShotOdds pulls live odds from 40+ sportsbooks and plots every price change on a real-time chart. You can see exactly when and where a line moved, compare books side by side, and spot the steam moves before the market settles.
+						TrueShotOdds pulls live odds from 10+ sportsbooks and plots every price change on a real-time chart. You can see exactly when and where a line moved, compare books side by side, and spot the steam moves before the market settles.
 					</p>
 					<ul className="space-y-4 mb-12">
 						{[
 							'Live line charts updating every few seconds',
-							'Compare line movement across 40+ sportsbooks simultaneously',
+							'Compare line movement across 10+ sportsbooks simultaneously',
 							'Historical odds data to see how far lines have moved',
 							'Filter by league, game, and market type',
 						].map((item) => (
