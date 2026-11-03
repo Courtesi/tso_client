@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="105" height="105" viewBox="2 11 105 105" role="img" aria-label="TrueShotOdds logo">
+<defs><linearGradient id="tso-top" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".48" stop-color="#CED4FF"/><stop offset="1" stop-color="#9E9AFF"/></linearGradient>
+<linearGradient id="tso-stem" x1="0" y1="0" x2=".9" y2="1"><stop offset="0" stop-color="#8781FF"/><stop offset="1" stop-color="#5B5FFF"/></linearGradient>
+<linearGradient id="tso-green" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#159E80"/><stop offset="1" stop-color="#22D489"/></linearGradient></defs><path d="M 14 26 L 107 26 L 94 43 L 49 43 L 29 101 L 9 101 L 30 43 L 2 43 Z" fill="url(#tso-top)"/><path d="M 30 43 L 49 43 L 29 101 L 9 101 Z" fill="url(#tso-stem)"/><path d="M 62 57 L 96 57 L 89 68 L 55 68 Z" fill="url(#tso-green)"/><path d="M 55 76 L 85 76 L 78 87 L 48 87 Z" fill="url(#tso-green)"/></svg>

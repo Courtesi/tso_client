@@ -4,6 +4,10 @@
 	--font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 	--font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
+
+	/* Brand wordmark colors (from logo-primary.svg) */
+	--color-brand-ink: #F8F9FF;
+	--color-brand: #8581FF;
 }
 
 @keyframes blink {

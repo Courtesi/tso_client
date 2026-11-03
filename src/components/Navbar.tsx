@@ -5,6 +5,7 @@ import MobileMenu from './MobileMenu';
 import DashboardMobileMenu from './DashboardMobileMenu';
 import UserMenu from './UserMenu';
 import BugReportModal from './BugReportModal';
+import Logo from './Logo';
 
 interface NavbarProps {
 	onAuthModalOpen?: () => void;
@@ -118,11 +119,10 @@ function Navbar({ onAuthModalOpen }: NavbarProps) {
 				<div className="flex items-center gap-8">
 					<button
 						onClick={() => navigate('/')}
-						className="flex items-center gap-2 cursor-pointer"
+						className="rounded-lg transition-transform duration-100 active:scale-[0.97] cursor-pointer"
 						aria-label="TrueShotOdds home"
 					>
-						<img src="/logo.png" alt="" className="w-8" />
-						<span className="text-xl font-bold tracking-tight text-gray-50">TrueShotOdds</span>
+						<Logo />
 					</button>
 
 					{!isUserPage && (
