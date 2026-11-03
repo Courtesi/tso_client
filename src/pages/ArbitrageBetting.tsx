@@ -26,7 +26,7 @@ function ArbitrageBetting() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-20 max-w-4xl">
-				<h1 className="heading-hero uppercase text-4xl lg:text-6xl text-gray-100 text-center mb-6">
+				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					What Is Arbitrage Betting?
 				</h1>
 				<p className="text-xl text-gray-300 text-center max-w-2xl mx-auto">
@@ -37,7 +37,7 @@ function ArbitrageBetting() {
 			{/* How it works */}
 			<div className="w-full bg-gray-900 py-20 px-4">
 				<div className="max-w-4xl mx-auto">
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-10">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-10">
 						How It Works
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -58,7 +58,7 @@ function ArbitrageBetting() {
 						</div>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						A Simple Example
 					</h2>
 					<div className="bg-gray-800/50 rounded-xl p-8 border border-white/10 mb-16">
@@ -76,7 +76,7 @@ function ArbitrageBetting() {
 						<p className="text-gray-300 text-lg">By betting both sides with calculated stakes, you collect more on the winning side than you lose on the other — locking in a small but guaranteed profit on every game.</p>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						How TrueShotOdds Finds Arbs For You
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">

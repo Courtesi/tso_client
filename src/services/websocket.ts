@@ -2,6 +2,10 @@ import { auth } from '../config/firebase';
 
 const WS_URL = import.meta.env.VITE_API_URL?.replace('http', 'ws') || 'ws://localhost:8000';
 
+// Connection chatter is useful while developing but noise in production consoles.
+// Warnings and errors still always log. (`env` is undefined when loaded outside Vite, e.g. in tests.)
+const debugLog: (...args: unknown[]) => void = import.meta.env?.DEV ? console.log.bind(console) : () => {};
+
 export interface FilterOptions {
 	// Terminal/Charts filters
 	league?: string | string[] | null;
@@ -70,7 +74,7 @@ export class WebSocketService {
 
 	async connect(token: string): Promise<void> {
 		if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
-			console.log('WebSocket already connected or connecting');
+			debugLog('WebSocket already connected or connecting');
 			return;
 		}
 
@@ -80,7 +84,7 @@ export class WebSocketService {
 
 		try {
 			const wsUrl = `${WS_URL}/api/ws`;
-			console.log('Connecting to WebSocket:', wsUrl);
+			debugLog('Connecting to WebSocket:', wsUrl);
 
 			this.ws = new WebSocket(wsUrl);
             const socket = this.ws;
@@ -89,7 +93,7 @@ export class WebSocketService {
             }, 15000);
 
 			this.ws.onopen = async () => {
-				console.log('WebSocket connected, authenticating...');
+				debugLog('WebSocket connected, authenticating...');
 
 				// Send authentication message
 				this.send({
@@ -112,7 +116,7 @@ export class WebSocketService {
 		this.intentionallyClosed = true;
 		if (this.connectTimeout) clearTimeout(this.connectTimeout);
 		this.connectTimeout = null;
-		console.log('Disconnecting WebSocket');
+		debugLog('Disconnecting WebSocket');
 		this.stopHeartbeat();
 
 		if (this.reconnectTimeout) {
@@ -134,7 +138,7 @@ export class WebSocketService {
 	}
 
 	subscribe(stream: StreamType, filters: FilterOptions, onMessage: StreamCallback): void {
-		console.log(`Subscribing to ${stream} with filters:`, filters);
+		debugLog(`Subscribing to ${stream} with filters:`, filters);
 
 		this.onMessageCallbacks.set(stream, onMessage);
 
@@ -157,7 +161,7 @@ export class WebSocketService {
 		if (!this.activeSubscriptions.has(stream)) return;
 
 		this.activeSubscriptions.set(stream, { filters: { ...filters } });
-		console.log(`Updating ${stream} filters:`, filters);
+		debugLog(`Updating ${stream} filters:`, filters);
 
 		if (this.ws && this.ws.readyState === WebSocket.OPEN) {
 			this.send({
@@ -169,7 +173,7 @@ export class WebSocketService {
 	}
 
 	unsubscribe(stream: StreamType): void {
-		console.log(`Unsubscribing from ${stream}`);
+		debugLog(`Unsubscribing from ${stream}`);
 
 		this.activeSubscriptions.delete(stream);
 		this.onMessageCallbacks.delete(stream);
@@ -210,7 +214,7 @@ export class WebSocketService {
 	private handleMessage(event: MessageEvent): void {
 		try {
 			const message = JSON.parse(event.data) as WebSocketMessage;
-			console.log('WebSocket message received:', message.type);
+			debugLog('WebSocket message received:', message.type);
 
 			switch (message.type) {
 				case 'auth_success':
@@ -218,7 +222,7 @@ export class WebSocketService {
 					this.connectTimeout = null;
 					this.reconnectAttempts = 0;
 					this.refreshToken = false;
-					console.log('Authentication successful:', message.user);
+					debugLog('Authentication successful:', message.user);
 					this.setStatus('connected');
 					this.startHeartbeat();
 
@@ -226,7 +230,7 @@ export class WebSocketService {
 					this.activeSubscriptions.forEach(({ filters }, stream) => {
 						if (this.onMessageCallbacks.has(stream)) {
 							this.send({ type: 'subscribe', stream, filters });
-							console.log(`Re-subscribed to ${stream}`);
+							debugLog(`Re-subscribed to ${stream}`);
 						}
 					});
 
@@ -246,7 +250,7 @@ export class WebSocketService {
 
 				case 'subscribed':
 					if (message.stream) this.subscribedCallbacks.get(message.stream)?.forEach(callback => callback());
-					console.log(`Subscribed to ${message.stream}`);
+					debugLog(`Subscribed to ${message.stream}`);
 					break;
 
 				case 'data': {
@@ -259,11 +263,11 @@ export class WebSocketService {
 				}
 
 				case 'filters_updated':
-					console.log('Filters updated:', message.filters);
+					debugLog('Filters updated:', message.filters);
 					break;
 
 				case 'unsubscribed':
-					console.log(`Unsubscribed from ${message.stream}`);
+					debugLog(`Unsubscribed from ${message.stream}`);
 					break;
 
 				case 'pong':
@@ -291,7 +295,7 @@ export class WebSocketService {
 	}
 
 	private handleClose(event: CloseEvent): void {
-		console.log('WebSocket closed:', event.code, event.reason);
+		debugLog('WebSocket closed:', event.code, event.reason);
 
 		this.stopHeartbeat();
 		if (this.connectTimeout) clearTimeout(this.connectTimeout);
@@ -319,7 +323,7 @@ export class WebSocketService {
 		this.reconnectAttempts++;
 		const delay = Math.min(this.maxReconnectDelay, this.reconnectDelay * Math.pow(2, Math.min(this.reconnectAttempts - 1, 10))); // Exponential backoff
 
-		console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+		debugLog(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
 
 		this.setStatus('reconnecting');
 

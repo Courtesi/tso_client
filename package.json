@@ -17,8 +17,6 @@
   "dependencies": {
     "@stripe/stripe-js": "^9.2.0",
     "@tailwindcss/vite": "^4.1.17",
-    "@tsparticles/react": "^3.0.0",
-    "@tsparticles/slim": "^3.9.1",
     "firebase": "^12.5.0",
     "lightweight-charts": "^5.1.0",
     "posthog-js": "^1.372.2",

@@ -26,15 +26,21 @@ export function useInView(options?: UseInViewOptions) {
 
 			if (visibleRatio >= threshold && rect.bottom > 0 && rect.top < windowHeight) {
 				setIsInView(true);
+				return true;
 			}
+			return false;
 		};
 
 		// Check immediately on mount
-		checkInitialIntersection();
+		if (checkInitialIntersection()) return;
 
+		// Reveal once: stop observing after the first intersection so it never replays
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				setIsInView(entry.isIntersecting);
+				if (entry.isIntersecting) {
+					setIsInView(true);
+					observer.disconnect();
+				}
 			},
 			{
 				threshold: options?.threshold ?? 0.1,

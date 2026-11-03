@@ -4,7 +4,6 @@
 	--font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 	--font-heading: 'Geist', ui-sans-serif, system-ui, sans-serif;
-	--font-table: 'Helvetica', sans-serif;
 }
 
 @keyframes blink {
@@ -115,12 +114,6 @@ html {
 	letter-spacing: -0.01em;
 }
 
-/* Uppercase headings need open tracking, not tight */
-.heading-hero.uppercase,
-.heading-subtitle.uppercase {
-	letter-spacing: 0.01em;
-}
-
 @keyframes menu-in {
 	from { opacity: 0; transform: scale(0.96) translateY(-4px); }
 	to { opacity: 1; transform: scale(1) translateY(0); }
@@ -169,5 +162,6 @@ html {
 }
 
 .text-table {
-	font-family: var(--font-table);
+	font-family: var(--font-sans);
+	font-variant-numeric: tabular-nums;
 }

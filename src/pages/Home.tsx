@@ -1,77 +1,24 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { homeFaqs } from '../data/faqs';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useParticles } from '../contexts/ParticlesContext';
 import AuthModal from '../components/AuthModal';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FeatureSection from '../components/FeatureSection';
 import SportsbookStrip from '../components/SportsbookStrip';
 import LiveOddsTable from '../components/LiveOddsTable';
+import GridBackground from '../components/GridBackground';
 
-import Particles from "@tsparticles/react";
-// import type { Container } from "@tsparticles/engine";
+const primaryButtonClass = 'rounded-xl bg-white px-7 py-3 text-base font-semibold text-gray-950 shadow-lg shadow-black/20 transition-[background-color,transform] duration-100 hover:bg-gray-200 active:scale-[0.97] cursor-pointer';
+const secondaryButtonClass = 'rounded-xl border border-white/15 bg-white/[0.06] px-7 py-3 text-base font-semibold text-white transition-[background-color,transform] duration-100 hover:bg-white/[0.12] active:scale-[0.97] cursor-pointer';
 
 function Home() {
 	const { currentUser, userTier } = useAuth();
-	const { init } = useParticles();
 	const navigate = useNavigate();
 	const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-	// const particlesLoaded = useCallback(async (container?: Container) => {
-    //     console.log('🌟 Particles loaded/reloaded at:', new Date().toISOString(), container);
-    // }, []);
-
-	const particlesOptions = useMemo(() => ({
-		background: {
-			color: {
-				value: "transparent",
-			},
-		},
-		fpsLimit: 60,
-		fullScreen: {
-			enable: false,
-		},
-		responsive: [],
-		particles: {
-			number: {
-				value: 150,
-				density: {
-					enable: false
-				}
-			},
-			color: {
-				value: "#ffffff",
-			},
-			shape: {
-				type: "circle",
-			},
-			opacity: {
-				value: { min: 0.1, max: 0.8 },
-				animation: {
-					enable: true,
-					speed: 0.5,
-					sync: false,
-				},
-			},
-			size: {
-				value: { min: 0.5, max: 2.5 },
-			},
-			move: {
-				enable: true,
-				speed: 0.1,
-				direction: "none" as const,
-				random: false,
-				straight: false,
-				outModes: {
-					default: "bounce" as const,
-				},
-			},
-		},
-		detectRetina: true,
-	}), []);
 
 	return (
 		<>
@@ -98,92 +45,68 @@ function Home() {
 		</Helmet>
 		<div className="min-h-screen text-white relative bg-gradient-to-br from-gray-900 via-indigo-900 to-indigo-950">
 
-
-			{/* Starry Background - Full Page */}
-			{init && (
-				<Particles
-					key="stable-particles"
-					id="page-particles"
-					className="fixed inset-0 z-0 pointer-events-none"
-					options={particlesOptions}
-				/>
-			)}
-
 			{/* Navigation Bar */}
 			<Navbar onAuthModalOpen={() => setIsAuthModalOpen(true)} />
 
-			{/* Main Content */}
-			<div className="container mx-auto px-4 py-20">
+			{/* Hero */}
+			<section className="relative overflow-hidden">
+				<GridBackground />
 
-				{/* Hero Banner */}
-				<div className="max-w-6xl mx-auto lg:mb-16 mt-20">
-					<div className="rounded-2xl">
-						<div className="grid grid-cols-1 lg:flex gap-2">
-							{/* Left Side - Text Content */}
-							<div className="order-second lg:order-first p-12 flex flex-col justify-center">
-								<h2 className="heading-hero text-center lg:text-left text-3xl lg:text-6xl text-gray-100 mb-4">
-									Live Odds Straight To Your Feed
-								</h2>
-								<p className="text-xl text-gray-100 text-center lg:text-left mb-6">
-									TrueShotOdds focuses on getting real-time bets delivered directly to your dashboard. Don't miss out as we expand our reach on sportsbooks.
+				<div className="relative z-10 container mx-auto px-4 pt-32 pb-16 lg:pt-40 lg:pb-20">
+					<div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-8">
+						<div className="text-center lg:text-left">
+							<h1 className="heading-hero text-4xl sm:text-5xl lg:text-6xl text-gray-50">
+								Spot the edge before the line moves
+							</h1>
+							<p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-gray-300 lg:mx-0 lg:text-xl">
+								TrueShotOdds watches 10+ sportsbooks and exchanges in real time, flags arbitrage and +EV bets the moment they appear, and works out the stakes for you.
+							</p>
+
+							<div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+								{currentUser && userTier === 'premium' ? (
+									<button onClick={() => navigate('/dashboard')} className={primaryButtonClass}>
+										Go to Dashboard
+									</button>
+								) : currentUser && userTier === 'free' ? (
+									<button onClick={() => navigate('/pricing')} className={primaryButtonClass}>
+										Upgrade Now
+									</button>
+								) : (
+									<button onClick={() => setIsAuthModalOpen(true)} className={primaryButtonClass}>
+										Get Started Free
+									</button>
+								)}
+								<button onClick={() => navigate('/pricing')} className={secondaryButtonClass}>
+									View Plans
+								</button>
+							</div>
+
+							{userTier !== 'premium' && (
+								<p className="mt-4 text-sm text-gray-400">
+									The free plan includes NBA, NFL and MLB.
 								</p>
-							</div>
+							)}
+						</div>
 
-							{/* Right Side - Image Placeholder */}
-							<div className="order-first ml-12 lg:ml-0 lg:order-second flex items-center justify-center">
-								<div className="text-center">
-									<img
-										src="/hero_banner.png"
-										className="w-full scale-125 mx-auto text-white"
-										alt="Hero Banner"
-									/>
-								</div>
-							</div>
+						<div className="px-4 sm:px-8 lg:px-0">
+							<img
+								src="/hero_banner.png"
+								className="mx-auto w-full lg:scale-110"
+								alt="TrueShotOdds arbitrage bets over a chart of weekly returns"
+							/>
 						</div>
 					</div>
 				</div>
 
-				{/* CTA Buttons */}
-				<div className="grid grid-cols-1 md:flex gap-4 justify-center mb-20">
-					{currentUser && userTier === 'premium' ? (
-						<button
-							onClick={() => navigate('/dashboard')}
-							className="backdrop-blur-lg bg-gray-100 hover:bg-gray-300 text-black text-xl font-semibold py-3 px-12 rounded-lg transition-colors cursor-pointer"
-						>
-							Go to Dashboard
-						</button>
-					) : currentUser && userTier === 'free' ? (
-						<button
-							onClick={() => navigate('/pricing')}
-							className="backdrop-blur-lg bg-gray-100 hover:bg-gray-300 text-black text-xl font-semibold py-3 px-12 rounded-lg transition-colors cursor-pointer"
-						>
-							Upgrade Now
-						</button>
-					) : (
-						<button
-							onClick={() => setIsAuthModalOpen(true)}
-							className="backdrop-blur-lg bg-gray-100 hover:bg-gray-300 text-black text-xl font-semibold py-3 px-14 rounded-lg transition-colors cursor-pointer"
-						>
-							Get Started
-						</button>
-					)}
-					<button
-						onClick={() => navigate('/pricing')}
-						className="backdrop-blur-lg bg-gray-700 hover:bg-gray-600/100 text-white text-xl font-semibold py-3 px-14 rounded-lg transition-colors cursor-pointer"
-					>
-						View Plans
-					</button>
-				</div>
-
-				<div className="mb-16">
+				<div className="relative z-10 container mx-auto px-4 pb-20 lg:pb-24">
 					<SportsbookStrip />
 				</div>
-			</div>
+			</section>
 
 			{/* Feature Showcase - Full width, outside container */}
-			<div className="relative z-10 w-full bg-gray-900 py-16 px-4 lg:px-8">
+			<div className="relative z-10 w-full bg-gray-900 py-24 px-4 lg:py-32 lg:px-8">
 				<div className="max-w-6xl mx-auto">
-					<h2 className="heading-hero text-3xl lg:text-5xl text-gray-100 text-center mb-50">
+					<h2 className="heading-hero text-3xl lg:text-5xl text-gray-100 text-center mb-16 lg:mb-24">
 						What We Offer
 					</h2>
 
@@ -231,7 +154,7 @@ function Home() {
 			</div>
 
 			{/* FAQ Section */}
-			<div className="container mx-auto px-4 py-20 max-w-3xl">
+			<div className="relative z-10 container mx-auto px-4 py-24 max-w-3xl">
 				<h2 className="heading-hero text-3xl lg:text-5xl text-gray-100 text-center mb-12">
 					Common Questions
 				</h2>
@@ -251,7 +174,7 @@ function Home() {
 				<div className="text-center">
 					<button
 						onClick={() => navigate('/faq')}
-						className="text-indigo-400 hover:text-indigo-300 text-lg font-semibold transition-colors cursor-pointer"
+						className="text-indigo-400 hover:text-indigo-300 active:text-indigo-200 text-lg font-semibold transition-colors cursor-pointer"
 					>
 						View all questions →
 					</button>
@@ -259,24 +182,24 @@ function Home() {
 			</div>
 
 			{/* Final CTA Section */}
-			<div className="relative z-10 px-4 py-20 bg-gray-900 w-full">
+			<div className="relative z-10 px-4 py-24 lg:py-32 bg-gray-900 w-full">
 				<div className="max-w-4xl mx-auto text-center">
-					<div className="p-12 md:p-16">
-						<h2 className="heading-hero text-4xl md:text-5xl text-gray-100 mb-12">
+					<div>
+						<h2 className="heading-hero text-4xl md:text-5xl text-gray-100 mb-10">
 							Find your True Shot today and get started
 						</h2>
 
 						{currentUser ? (
 							<button
 								onClick={() => navigate('/dashboard')}
-								className="backdrop-blur-lg bg-gray-100 hover:bg-gray-300 text-black text-xl font-semibold py-3 px-12 rounded-lg transition-colors cursor-pointer"
+								className={primaryButtonClass}
 							>
 								Go to Dashboard
 							</button>
 						) : (
 							<button
 								onClick={() => setIsAuthModalOpen(true)}
-								className="backdrop-blur-lg bg-gray-100 hover:bg-gray-300 text-black text-xl font-semibold py-3 px-12 rounded-lg transition-colors cursor-pointer"
+								className={primaryButtonClass}
 							>
 								Get Started for Free
 							</button>

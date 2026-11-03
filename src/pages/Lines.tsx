@@ -26,7 +26,7 @@ function Lines() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-20 max-w-4xl">
-				<h1 className="heading-hero uppercase text-4xl lg:text-6xl text-gray-100 text-center mb-6">
+				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					What Are Betting Lines?
 				</h1>
 				<p className="text-xl text-gray-300 text-center max-w-2xl mx-auto">
@@ -38,14 +38,14 @@ function Lines() {
 			<div className="w-full bg-gray-900 py-20 px-4">
 				<div className="max-w-4xl mx-auto">
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						How Lines Are Set
 					</h2>
 					<p className="text-gray-300 text-xl mb-12">
 						Sportsbooks open a line based on their own models and the market. Early lines attract sharp bettors — professionals who bet large amounts on mispriced odds. When sharps hit one side, the book adjusts the line to balance their exposure. By the time the game starts, the line reflects a combination of the book's model and the collective wisdom of the market.
 					</p>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-8">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-8">
 						Why Lines Move
 					</h2>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
@@ -63,7 +63,7 @@ function Lines() {
 						</div>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						Reading Line Movement
 					</h2>
 					<div className="bg-gray-800/50 rounded-xl p-8 border border-white/10 mb-16">
@@ -80,7 +80,7 @@ function Lines() {
 						</ul>
 					</div>
 
-					<h2 className="heading-hero uppercase text-3xl lg:text-4xl text-gray-100 mb-6">
+					<h2 className="heading-hero text-3xl lg:text-4xl text-gray-100 mb-6">
 						How TrueShotOdds Tracks Lines
 					</h2>
 					<p className="text-gray-300 text-xl mb-8">
