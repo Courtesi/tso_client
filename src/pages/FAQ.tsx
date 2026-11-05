@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
 import { faqs } from '../data/faqs';
+import GridBackground from '../components/GridBackground';
 
 function FAQ() {
 	const { currentUser } = useAuth();
@@ -40,6 +41,7 @@ function FAQ() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-12 max-w-3xl">
+				<GridBackground height="20rem"/>
 				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					Frequently Asked Questions
 				</h1>

@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AuthModal from '../components/AuthModal';
+import GridBackground from '../components/GridBackground';
 
 function Lines() {
 	const { currentUser } = useAuth();
@@ -26,6 +27,7 @@ function Lines() {
 
 			{/* Hero */}
 			<div className="container mx-auto px-4 pt-36 pb-20 max-w-4xl">
+				<GridBackground height="20rem"/>
 				<h1 className="heading-hero text-4xl lg:text-6xl text-gray-100 text-center mb-6">
 					What Are Betting Lines?
 				</h1>
