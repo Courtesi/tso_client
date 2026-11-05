@@ -8,7 +8,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import FeatureSection from '../components/FeatureSection';
 import SportsbookStrip from '../components/SportsbookStrip';
-import LiveOddsTable from '../components/LiveOddsTable';
+import FeatureVideo from '../components/FeatureVideo';
 import GridBackground from '../components/GridBackground';
 
 const primaryButtonClass = 'rounded-xl bg-white px-7 py-3 text-base font-semibold text-gray-950 shadow-lg shadow-black/20 transition-[background-color,transform] duration-100 hover:bg-gray-200 active:scale-[0.97] cursor-pointer';
@@ -118,7 +118,7 @@ function Home() {
 							'Multi-sportsbook comparison',
 							'Historical odds data',
 						]}
-						media={<LiveOddsTable onSignIn={() => setIsAuthModalOpen(true)} />}
+						media={<FeatureVideo src="/dashboard_videos/lines" label="Odds updating live across sportsbooks, then a game's line movement chart" />}
 						imagePosition="right"
 						learnMorePath="/lines"
 					/>
@@ -131,8 +131,7 @@ function Home() {
 							'Profit and stake calculations',
 							'Growing supported sportsbooks',
 						]}
-						imageSrc="/dashboard_screenshots/arbs-with-visuals.png"
-						imageAlt="Arbitrage dashboard"
+						media={<FeatureVideo src="/dashboard_videos/arbs" label="Arbitrage dashboard detecting a new bet, pinning it, and calculating stakes" />}
 						imagePosition="left"
 						learnMorePath="/arbitrage-betting"
 					/>
@@ -145,8 +144,7 @@ function Home() {
 							'Advanced filtering options',
 							'Sortable by EV percentage',
 						]}
-						imageSrc="/dashboard_screenshots/evbets.PNG"
-						imageAlt="EV bets table"
+						media={<FeatureVideo src="/dashboard_videos/ev" label="EV bets table filtered to high-confidence bets above 4% expected value" />}
 						imagePosition="right"
 						learnMorePath="/ev-betting"
 					/>
