@@ -18,11 +18,16 @@ export default function FeatureVideo({ src, label }: FeatureVideoProps) {
 		const video = videoRef.current;
 		if (!video || reduceMotion) return;
 
+		// React doesn't reliably reflect `muted` to the DOM, and iOS only autoplays muted video
+		video.muted = true;
+
 		const observer = new IntersectionObserver(
 			([entry]) => {
 				if (entry.isIntersecting) {
-					// Autoplay can still be refused (e.g. data saver); the poster stays up
-					video.play().catch(() => {});
+					// Autoplay can still be refused (e.g. data saver, Brave's autoplay blocking); show controls so it can be started by hand
+					video.play().catch(() => {
+						video.controls = true;
+					});
 				} else {
 					video.pause();
 				}
@@ -47,8 +52,9 @@ export default function FeatureVideo({ src, label }: FeatureVideoProps) {
 				aria-label={label}
 				className="block w-full h-auto aspect-[1100/688]"
 			>
-				<source src={`${src}.webm`} type="video/webm" />
-				<source src={`${src}.mp4`} type="video/mp4" />
+				{/* MP4 first: iOS WebKit claims WebM support but often fails to decode it, and never falls back */}
+				<source src={`${src}.mp4`} type='video/mp4; codecs="avc1.64001F"' />
+				<source src={`${src}.webm`} type='video/webm; codecs="vp9"' />
 			</video>
 		</div>
 	);
