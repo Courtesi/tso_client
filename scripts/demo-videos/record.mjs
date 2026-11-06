@@ -388,7 +388,7 @@ function encode(name, frames, frameDir, crop = [0, 0, VIEWPORT.width, VIEWPORT.h
 	const ffmpeg = (args) => execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...args], { stdio: 'inherit' });
 
 	ffmpeg(['-f', 'concat', '-safe', '0', '-i', listFile, '-filter_complex', filter, '-map', '[v]', '-c:v', 'libx264', '-crf', '12', '-preset', 'slow', master]);
-	ffmpeg(['-i', master, '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-an', '-movflags', '+faststart', join(OUT_DIR, `${name}.mp4`)]);
+	ffmpeg(['-i', master, '-c:v', 'libx264', '-crf', '23', '-preset', 'slow', '-profile:v', 'high', '-pix_fmt', 'yuv420p', '-vf', 'scale=out_range=tv', '-color_range', 'tv', '-colorspace', 'bt709', '-color_primaries', 'bt709', '-color_trc', 'bt709', '-an', '-movflags', '+faststart', join(OUT_DIR, `${name}.mp4`)]);
 	ffmpeg(['-i', master, '-c:v', 'libvpx-vp9', '-crf', '40', '-b:v', '0', '-row-mt', '1', '-an', join(OUT_DIR, `${name}.webm`)]);
 	ffmpeg(['-i', master, '-frames:v', '1', '-q:v', '3', join(OUT_DIR, `${name}-poster.jpg`)]);
 }
